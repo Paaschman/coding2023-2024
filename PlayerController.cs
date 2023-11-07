@@ -4,27 +4,45 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float horizontalInput;
+    public float verticalInput;
+    public float speed = 10.0f;
+    public float xRange = 10.0f;
+    public GameObject projectilePrefab;
 
-    private float speed = 20.0f;
-    private float turnSpeed = 45.0f;
-    private float horizontalInput;
-    private float fowardInput;
-
-    // Start is called before the first frame update void Start ()
+    // Start is called before the first frame update
+    void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-    horizontalInput = Input.GetAxis("Horizontal")
-    fowardInput = Input.GetAxis("Vertical");
-    // Moves the car foward based on vertical input
-    transform.Translate(Vector3.foward * Time.deltaTime * speed * fowardInput);
-    // Rotates the car based on horizontal input
-    transform.Rotate(Vector3.up, turnSpeed * horizontalINput * Time.deltaTime);
-
-
+        horizontalInput = Input.GetAxis("Horizontal");
+        transform.Translate(Vector3.right * horizontalInput * speed * Time.deltaTime);
+        if (transform.position.x < -xRange)
+        {
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
         }
+        if (transform.position.x < -10.0)
+        {
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
+        }
+
+        verticalInput = Input.GetAxis("Vertical");
+        transform.Translate(Vector3.forward * verticalInput * speed * Time.deltaTime);
+        if (transform.position.x < -xRange)
+        {
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
+        }
+        if (transform.position.x < -10.0)
+        {
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
+        }
+
+        
+
+
+    }
 }

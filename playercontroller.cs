@@ -8,14 +8,15 @@ public float gravityModifier;
 public float jumpForce;
 private Rigidbody playerRb;
 public bool isOnGround=true;
+public bool gameOver = false;
 
     // Start is called before the first frame update
     void Start()
-    {
+{
+   
+playerRb = GetComponent<Rigidbody>();
 Physics.gravity *= gravityModifier;
- 
-       playerRb = GetComponent<Rigidbody>(); 
-    }
+     }
 
     // Update is called once per frame
     void Update()
@@ -25,9 +26,16 @@ playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 isOnGround = false;
     }
 }
+
 private void OnCollisionEnter(Collision collision) 
 {
-isOnGround = true; 
+if (collision.gameObject.CompareTag("Ground"))  {
+isOnGround = true;
 }
+else if (collision.gameObject.CompareTag("Obstacle")) {
+    gameOver = true;
+    Debug.Log("Game over!");
+}
+   } 
 
 }

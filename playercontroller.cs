@@ -4,38 +4,50 @@ using UnityEngine;
 
 public class playercontroller : MonoBehaviour
 {
-public float gravityModifier;
-public float jumpForce;
-private Rigidbody playerRb;
-public bool isOnGround=true;
-public bool gameOver = false;
+    public float horizontalInput;
+    public float verticalInput;
+    public float speed = 10.0f;
+    public float xRange = 20.0f;
+    public GameObject projectilePrefab;
 
     // Start is called before the first frame update
     void Start()
-{
-   
-playerRb = GetComponent<Rigidbody>();
-Physics.gravity *= gravityModifier;
-     }
+    {
+
+    }
 
     // Update is called once per frame
     void Update()
     {
-      if (Input.GetKeyDown(KeyCode.Space)&& isOnGround){
-playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-isOnGround = false;
+        horizontalInput = Input.GetAxis("Horizontal");
+        transform.Translate(Vector3.right * horizontalInput * speed * Time.deltaTime);
+        if (transform.position.x < -xRange)
+        {
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
+        }
+        if (transform.position.x > xRange)
+        {
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
+        }
+
+        verticalInput = Input.GetAxis("Vertical");
+        transform.Translate(Vector3.forward * verticalInput * speed * Time.deltaTime);
+        if (transform.position.z < -xRange)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, -xRange);
+        }
+        if (transform.position.z > xRange)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, xRange);
+        }
+
+        //Launch a projectile from the player
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+
+        }
+
+
     }
-}
-
-private void OnCollisionEnter(Collision collision) 
-{
-if (collision.gameObject.CompareTag("Ground"))  {
-isOnGround = true;
-}
-else if (collision.gameObject.CompareTag("Obstacle")) {
-    gameOver = true;
-    Debug.Log("Game over!");
-}
-   } 
-
 }
